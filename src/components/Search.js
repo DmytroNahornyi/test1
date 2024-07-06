@@ -1,25 +1,38 @@
-// components/Search.js
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setSearchQuery,
+  setCategoryFilter,
+} from '../redux/actions/filterActions';
 
-function Search({ onSearch }) {
-  const [query, setQuery] = useState('');
+const SearchBar = () => {
+  const dispatch = useDispatch();
+  const { searchQuery, categoryFilter } = useSelector(state => state.filters);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSearch(query);
+  const handleSearchChange = e => {
+    dispatch(setSearchQuery(e.target.value));
+  };
+
+  const handleCategoryChange = e => {
+    dispatch(setCategoryFilter(e.target.value));
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <input
         type="text"
-        value={query}
-        onChange={e => setQuery(e.target.value)}
-        placeholder="Поиск товаров..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+        placeholder="Search products..."
       />
-      <button type="submit">Поиск</button>
-    </form>
+      <select value={categoryFilter} onChange={handleCategoryChange}>
+        <option value="">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+        {/* Add more categories as needed */}
+      </select>
+    </div>
   );
-}
+};
 
-export default Search;
+export default SearchBar;
